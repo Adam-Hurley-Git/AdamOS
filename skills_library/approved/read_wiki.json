@@ -1,0 +1,14 @@
+{
+  "name": "read_wiki",
+  "description": "Reads a specific markdown file from the LLM-Wiki.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "wiki_path": {
+        "type": "string",
+        "description": "The relative path to the wiki file (e.g., 'global/architecture.md')."
+      }
+    },
+    "required": ["wiki_path"]
+  }
+}

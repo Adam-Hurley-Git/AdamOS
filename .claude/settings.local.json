@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/hurle_1pxotab/Documents/**)",
+      "Bash(dir \"C:\\\\Users\\\\hurle_1pxotab\\\\Documents\")",
+      "WebSearch"
+    ]
+  }
+}

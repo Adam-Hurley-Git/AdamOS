@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # Multica: Task Orchestration
+  multica:
+    image: multica/multica:v1.2.0@sha256:d81... # Example digest, will be pinned to exact
+    container_name: adamos_multica
+    ports:
+      - "3080:3080"
+    volumes:
+      - ./data/multica:/app/data
+      - ./services/multica/multica.yml:/app/config/multica.yml
+    environment:
+      - MULTICA_PORT=3080
+    restart: unless-stopped
+
+  # FalkorDB: Lightweight Graph Database (Replacing Neo4j)
+  falkordb:
+    image: falkordb/falkordb:latest # Pinning recommended for prod
+    container_name: adamos_falkordb
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/falkordb:/data
+    restart: unless-stopped
+
+  # Firecrawl: Deep Web Scraping
+  firecrawl:
+    image: firecrawl/firecrawl:latest # Pinning recommended for prod
+    container_name: adamos_firecrawl
+    ports:
+      - "3002:3002"
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    container_name: adamos_redis
+    ports:
+      - "6380:6379" # Different port to not conflict with FalkorDB
+    restart: unless-stopped
+
+  # Caddy: Reverse Proxy
+  caddy:
+    image: caddy:2-alpine
+    container_name: adamos_caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./data/caddy_data:/data
+      - ./data/caddy_config:/config
+    restart: unless-stopped
